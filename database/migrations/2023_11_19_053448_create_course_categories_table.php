@@ -11,15 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_categories', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->string('category_name',255);
-            $table->boolean('category_status')->default(1)->comment('1=>active 2=>inactive');
-            $table->string('category_image')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('title_en');
+            $table->text('url')->nullable();
+            $table->enum('type', ['free', 'paid', 'subscription'])->default('paid');
+            $table->text('instructor_names')->nullable();
+            $table->foreignId('course_category_id')->constrained()->onDelete('cascade');
+            $table->text('description_en')->nullable();
+            $table->integer('num_subscribers')->nullable();
+            $table->decimal('rating', 10, 2)->nullable();
+            $table->integer('num_reviews')->nullable();
+            $table->text('instructional_level')->nullable();
+            $table->text('objectives')->nullable();
+            $table->timestamps(0); // For created_at and updated_at
+            $table->softDeletes(); // For deleted_at
         });
     }
+    
 
     /**
      * Reverse the migrations.
