@@ -30,9 +30,10 @@
         <div class="row">
             <div class="col-lg-9 mx-auto">
                 <div class="event-search-bar">
-                    <form action="#">
+                    <form action="{{ route('recommendations') }}" method="POST">
+                        @csrf
                         <div class="form-input-group">
-                            <input type="text" class="form-control" placeholder="Search Course..." />
+                            <input type="text" class="form-control" name="query" placeholder="Search Course..." />
                             <button class="button button-lg button--primary" type="submit" id="button-addon2">
                                 Search
                             </button>
@@ -71,12 +72,12 @@
                                             <label> All </label>
                                         </div>
                                         <p class="check-details">
-                                            {{$allCourse->count()}}
+                                            {{$allCourse}}
                                         </p>
                                     </div>
                                     @forelse($category as $cat)
                                     @php
-                                    $courseCount = $cat->course()->where('status', 2)->count();
+                                    $courseCount = $cat->course()->count();
                                     @endphp
                                     <div class="accordion-body__item">
                                         <div class="check-box">
@@ -368,71 +369,145 @@
 
                 {{-- Courses --}}
                 <div class="row event-search-content">
-                    @forelse ($course as $c)
-                    <div class="col-md-6 mb-4">
-                        <div class="contentCard contentCard--course">
-                            <div class="contentCard-top">
-                                <a href="{{route('courseDetails', encryptor('encrypt', $c->id))}}"><img
-                                        src="{{asset('public/uploads/courses/'.$c->image)}}" alt="images"
-                                        class="img-fluid" /></a>
-                            </div>
-                            <div class="contentCard-bottom">
-                                <h5>
-                                    <a href="{{route('courseDetails', ['id' => encryptor('encrypt', $c->id)])}}"
-                                        class="font-title--card">{{$c->title_en}}</a>
-                                </h5>
-                                <div class="contentCard-info d-flex align-items-center justify-content-between">
-                                    <a href="{{route('instructorProfile', encryptor('encrypt', $c->instructor?->id))}}"
-                                        class="contentCard-user d-flex align-items-center">
-                                        <img src="{{asset('public/uploads/users/'.$c->instructor?->image)}}"
-                                            alt="Instructor Image" class="rounded-circle" height="34" width="34" />
-                                        <p class="font-para--md">{{$c->instructor?->name_en}}</p>
-                                    </a>
-                                    <div class="price">
-                                        <span>{{$c->price==null?'Free':'৳'.$c->price}}</span>
-                                        <del>{{$c->old_price?'৳'.$c->old_price:''}}</del>
+                    
+                    @if(session('results') && session('results')->isNotEmpty())
+                        @foreach(session('results') as $course)
+                            <div class="col-md-6 mb-4">
+                                <div class="contentCard contentCard--course">
+                                    <div class="contentCard-top">
+                                        <a href="{{ route('courseDetails', encryptor('encrypt', $course['id'])) }}">
+                                            <img src="{{ $course['image'] ? asset('public/uploads/courses/' . $course['image']) : asset('public/frontend/dist/images/course-default.jpg') }}" 
+                                                alt="{{ $course['title_en'] }}" 
+                                                class="img-fluid" 
+                                                onerror="this.src='{{ asset('public/frontend/dist/images/course-default.jpg') }}'"
+                                            />
+                                        </a>
+                                    </div>
+                                    <div class="contentCard-bottom">
+                                        <h5>
+                                            <a href="{{ route('courseDetails', ['id' => encryptor('encrypt', $course['id'])]) }}" class="font-title--card">
+                                                {{ $course['title_en'] }}
+                                            </a>
+                                        </h5>
+                                        <div class="contentCard-info d-flex align-items-center justify-content-between">
+                                            <a href="{{ route('instructorProfile', encryptor('encrypt', $course['instructor_id'])) }}" class="contentCard-user d-flex align-items-center">
+                                                <img src="{{ $course['instructor_image'] ? asset('public/uploads/users/' . $course['instructor_image']) : asset('public/frontend/dist/images/instructor-default.jpg') }}" 
+                                                    alt="Instructor Image" 
+                                                    class="rounded-circle" 
+                                                    height="34" 
+                                                    width="34"
+                                                    onerror="this.src='{{ asset('public/frontend/dist/images/instructor-default.jpg') }}'"
+                                                />
+                                                <p class="font-para--md">{{ $course['instructor_name'] }}</p>
+                                            </a>
+                                            <div class="price">
+                                                <span>{{ $course['type'] }}</span>
+                                                <del>{{ $course['old_price'] ? 'MAD' . $course['old_price'] : '' }}</del>
+                                            </div>
+                                        </div>
+                                        <div class="contentCard-more">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon">
+                                                    <img src="{{ asset('public/frontend/dist/images/icon/star.png') }}" alt="star" />
+                                                </div>
+                                                <span>{{ $course['rating'] }}</span>
+                                            </div>
+                                            <div class="eye d-flex align-items-center">
+                                                <div class="icon">
+                                                    <img src="{{ asset('public/frontend/dist/images/icon/eye.png') }}" alt="eye" />
+                                                </div>
+                                                <span>{{ $course['num_subscribers'] }}</span>
+                                            </div>
+                                            <div class="book d-flex align-items-center">
+                                                <div class="icon">
+                                                    <img src="{{ asset('public/frontend/dist/images/icon/book.png') }}" alt="location" />
+                                                </div>
+                                                <span>{{ $course['num_reviews'] }} reviews</span>
+                                            </div>
+                                            <div class="clock d-flex align-items-center">
+                                                <div class="icon">
+                                                    <img src="{{ asset('public/frontend/dist/images/icon/Clock.png') }}" alt="clock" />
+                                                </div>
+                                                <span>{{ $course['duration'] }} Hours</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="contentCard-more">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon">
-                                            <img src="{{asset('public/frontend/dist/images/icon/star.png')}}"
-                                                alt="star" />
+                            </div>
+                        @endforeach
+                        @else
+                            @forelse ($course as $c)
+                                <div class="col-md-6 mb-4">
+                                    <div class="contentCard contentCard--course">
+                                        <div class="contentCard-top">
+                                            <a href="{{ route('courseDetails', encryptor('encrypt', $c->id)) }}">
+                                                <img src="{{ $c->image ? asset('public/uploads/courses/' . $c->image) : asset('public/frontend/dist/images/course-default.jpg') }}" 
+                                                    alt="{{ $c->title_en }}" 
+                                                    class="img-fluid"
+                                                    onerror="this.src='{{ asset('public/frontend/dist/images/course-default.jpg') }}'"
+                                                />
+                                            </a>
                                         </div>
-                                        <span>4.5</span>
-                                    </div>
-                                    <div class="eye d-flex align-items-center">
-                                        <div class="icon">
-                                            <img src="{{asset('public/frontend/dist/images/icon/eye.png')}}"
-                                                alt="eye" />
+                                        <div class="contentCard-bottom">
+                                            <h5>
+                                                <a href="{{ route('courseDetails', ['id' => encryptor('encrypt', $c->id)]) }}" class="font-title--card">
+                                                    {{ $c->title_en }}
+                                                </a>
+                                            </h5>
+                                            <div class="contentCard-info d-flex align-items-center justify-content-between">
+                                                <a href="{{ route('instructorProfile', encryptor('encrypt', $c->instructor?->id)) }}" class="contentCard-user d-flex align-items-center">
+                                                    <img src="{{ $c->instructor?->image ? asset('public/uploads/users/' . $c->instructor?->image) : asset('public/frontend/dist/images/instructor-default.jpg') }}" 
+                                                        alt="Instructor Image" 
+                                                        class="rounded-circle" 
+                                                        height="34" 
+                                                        width="34"
+                                                        onerror="this.src='{{ asset('public/frontend/dist/images/instructor-default.jpg') }}'"
+                                                    />
+                                                    <p class="font-para--md">{{ $c->instructor?->name_en }}</p>
+                                                </a>
+                                                <div class="price">
+                                                    <span>{{ $c->type }}</span>
+                                                    <del>{{ $c->old_price ? 'MAD' . $c->old_price : '' }}</del>
+                                                </div>
+                                            </div>
+                                            <div class="contentCard-more">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="icon">
+                                                        <img src="{{ asset('public/frontend/dist/images/icon/star.png') }}" alt="star" />
+                                                    </div>
+                                                    <span>{{ $c->rating }}</span>
+                                                </div>
+                                                <div class="eye d-flex align-items-center">
+                                                    <div class="icon">
+                                                        <img src="{{ asset('public/frontend/dist/images/icon/eye.png') }}" alt="eye" />
+                                                    </div>
+                                                    <span>{{ $c->num_subscribers }}</span>
+                                                </div>
+                                                <div class="book d-flex align-items-center">
+                                                    <div class="icon">
+                                                        <img src="{{ asset('public/frontend/dist/images/icon/book.png') }}" alt="location" />
+                                                    </div>
+                                                    <span>{{ $c->num_reviews }} reviews</span>
+                                                </div>
+                                                <div class="clock d-flex align-items-center">
+                                                    <div class="icon">
+                                                        <img src="{{ asset('public/frontend/dist/images/icon/Clock.png') }}" alt="clock" />
+                                                    </div>
+                                                    <span>{{ $c->duration }} Hours</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span>24,517</span>
-                                    </div>
-                                    <div class="book d-flex align-items-center">
-                                        <div class="icon">
-                                            <img src="{{asset('public/frontend/dist/images/icon/book.png')}}"
-                                                alt="location" />
-                                        </div>
-                                        <span>{{$c->lesson}} Lesson</span>
-                                    </div>
-                                    <div class="clock d-flex align-items-center">
-                                        <div class="icon">
-                                            <img src="{{asset('public/frontend/dist/images/icon/Clock.png')}}"
-                                                alt="clock" />
-                                        </div>
-                                        <span>{{$c->duration}} Hours</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="col-md-6 mb-4">
-                        <div class="contentCard contentCard--course">
-                            <h3>No Course Found</h3>
-                        </div>
-                    </div>
-                    @endforelse
+                            @empty
+                                <div class="col-md-6 mb-4">
+                                    <div class="contentCard contentCard--course">
+                                        <h3>No Course Found</h3>
+                                    </div>
+                                </div>
+                            @endforelse
+                        @endif
+
                 </div>
 
                 <div class="pagination-group mt-lg-5 mt-2">

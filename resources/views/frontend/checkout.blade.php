@@ -68,9 +68,9 @@
                                         </h6>
                                         <p>by {{$details['instructor']}}</p>
                                         <div class="price">
-                                            <h6 class="font-para--md">{{$details['price'] ? '৳' . $details['price'] :
+                                            <h6 class="font-para--md">{{$details['price'] ? 'MAD' . $details['price'] :
                                                 'Free'}}</h6>
-                                            <p><del>{{$details['old_price'] ? '৳' . $details['old_price'] : ''}}</del>
+                                            <p><del>{{$details['old_price'] ? 'MAD' . $details['old_price'] : ''}}</del>
                                             </p>
                                         </div>
                                     </div>
@@ -84,29 +84,29 @@
                             <ul>
                                 <li>
                                     <p>Subtotal</p>
-                                    <p>{{'৳' . number_format((float) session('cart_details')['cart_total'] , 2)}}
+                                    <p>{{'MAD' . number_format((float) session('cart_details')['cart_total'] , 2)}}
                                     </p>
-                                    {{-- {{ '৳' . (session('cart_details') && array_key_exists('cart_total',
+                                    {{-- {{ 'MAD' . (session('cart_details') && array_key_exists('cart_total',
                                     session('cart_details')) ? number_format(session('cart_details')['cart_total'], 2) :
                                     '0.00') }} --}}
                                 </li>
                                 <li>
                                     <p>Coupon Discount ({{session('cart_details')['discount'] ?? 0.00}}%)</p>
-                                    <p>{{'৳' . number_format((float) isset(session('cart_details')['discount_amount']) ?
+                                    <p>{{'MAD' . number_format((float) isset(session('cart_details')['discount_amount']) ?
                                         session('cart_details')['discount_amount']: 0.00 , 2)}}</p>
                                 </li>
                                 <li>
                                     <p>Taxes (15%)</p>
-                                    <p>{{'৳' . number_format((float) session('cart_details')['tax'] , 2)}}</p>
-                                    {{-- {{ '৳' . (session('cart_details') && array_key_exists('tax',
+                                    <p>{{'MAD' . number_format((float) session('cart_details')['tax'] , 2)}}</p>
+                                    {{-- {{ 'MAD' . (session('cart_details') && array_key_exists('tax',
                                     session('cart_details')) ? number_format(session('cart_details')['tax'], 2) :
                                     '0.00') }} --}}
                                 </li>
                                 <li>
                                     <p class="font-title--card">Total:</p>
-                                    <p class="total-price font-title--card">{{'৳' .
+                                    <p class="total-price font-title--card">{{'MAD' .
                                         number_format((float)session('cart_details')['total_amount'] , 2)}}</p>
-                                    {{-- {{ '৳' . (session('cart_details') && array_key_exists('total_amount',
+                                    {{-- {{ 'MAD' . (session('cart_details') && array_key_exists('total_amount',
                                     session('cart_details')) ? number_format(session('cart_details')['total_amount'], 2)
                                     : '0.00') }} --}}
                                 </li>

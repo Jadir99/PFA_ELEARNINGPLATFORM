@@ -507,7 +507,7 @@
                                                          {{$data->instructor}}</a>
                                                     </p>
                                                 </div>
-                                                <p class="ms-2">{{$data->price?('৳'.$data->price):'Free'}}</p>
+                                                <p class="ms-2">{{$data->price?('MAD'.$data->price):'Free'}}</p>
                                             </div>
                                         </div>
                                         @endforeach

@@ -134,3 +134,10 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('frontend.contact');
 })->name('contact');
+
+
+# one for recommendation courses by search 
+Route::view('/test-recommend', 'recommend');
+
+Route::post('/recommendations', [SearchCourseController::class, 'getRecommendations'])->name('recommendations');
+

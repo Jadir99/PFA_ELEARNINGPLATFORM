@@ -120,8 +120,8 @@
                                         </a> --}}
                                         <p class="font-para--md">{{$pc?->instructor_names}}</p>
                                         <div class="price">
-                                            <span>{{$pc->price?'৳'.$pc->price:'Free'}}</span>
-                                            <del>{{$pc->old_price?'৳'.$pc->old_price:''}}</del>
+                                            <span>{{$pc->price?'MAD'.$pc->price:'Free'}}</span>
+                                            <del>{{$pc->old_price?'MAD'.$pc->old_price:''}}</del>
                                         </div>
                                     </div>
                                     <div class="contentCard-more">
