@@ -88,8 +88,12 @@ class SearchCourseController extends Controller
         return back()->with('error', 'Recommendation API request failed');
     }
 }
-
-    
-
-    
+    public function testRecommendation(Request $request)
+        {
+            $userId = $request->input('user_id');
+            $response = Http::post("http://127.0.0.1:5000/recommend-cf", [
+                'user_id' => $userId
+            ]);
+            return $response;
+        }
 }

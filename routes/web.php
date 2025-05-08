@@ -143,6 +143,8 @@ Route::post('/recommendations', [SearchCourseController::class, 'getRecommendati
 # Related Course recommendation
 Route::post('/recommend-by-id', [SearchCourseController::class, 'recommendByCourseId'])->name('recommendByCourseId');
 
+# cf -based autoencoder
+Route::post('/test-recommendation', [SearchCourseController::class, 'testRecommendation'])->name('CF-recomendation');
 
 
 
