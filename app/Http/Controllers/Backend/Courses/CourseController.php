@@ -13,6 +13,7 @@ use App\Models\Lesson;
 use App\Models\Material;
 use Exception;
 use File; 
+use Illuminate\Support\Facades\Http;
 
 class CourseController extends Controller
 { 
@@ -100,8 +101,34 @@ class CourseController extends Controller
     public function frontShow($id)
     {
         $course = Course::findOrFail(encryptor('decrypt', $id));
+        ## la parties des cours similaires utilise model ai 
+        
+        // // Optional: Validate the courseId if necessary
+        // if (!Course::find($courseId)) {
+        //     return back()->with('error', 'Invalid course_id');
+        // }
+
+        // // Send request to Flask API
+        $response = Http::post('http://127.0.0.1:5000/recommend-by-id', [
+            'course_id' =>encryptor('decrypt', $id)
+        ]);
+
+        if ($response->successful()) {
+            $recommendedCoursesData = $response->json();
+
+
+            // Get detailed Course info from DB
+            $courses = Course::whereIn('id', $recommendedCoursesData )->get();
+            // dd($courses);
+            // Return to view with courses or as JSON
+            // return view('courses.recommendations', compact('courses'));  // Returning to a view
+            // OR
+            // return response()->json($courses);  // Returning as JSON response
+        } else {
+            return back()->with('error', 'Recommendation API request failed');
+        }
         // dd($course); 
-        return view('frontend.courseDetails', compact('course'));
+        return view('frontend.courseDetails', compact('course','courses'));
     } 
 
 

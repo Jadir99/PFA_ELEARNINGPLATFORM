@@ -140,4 +140,18 @@ Route::get('/contact', function () {
 Route::view('/test-recommend', 'recommend');
 
 Route::post('/recommendations', [SearchCourseController::class, 'getRecommendations'])->name('recommendations');
+# Related Course recommendation
+Route::post('/recommend-by-id', [SearchCourseController::class, 'recommendByCourseId'])->name('recommendByCourseId');
+
+
+
+
+
+
+
+
+
+
+
+
 
