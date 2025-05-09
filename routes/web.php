@@ -131,6 +131,10 @@ Route::get('/about', function () {
     return view('frontend.about');
 })->name('about');
 
+Route::get('/chat', function () {
+    return view('chat');
+})->name('chat');
+
 Route::get('/contact', function () {
     return view('frontend.contact');
 })->name('contact');

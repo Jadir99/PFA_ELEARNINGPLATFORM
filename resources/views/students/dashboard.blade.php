@@ -146,14 +146,14 @@
                                             class="font-title--card">{{$a->course?->title_en}}</a>
                                     </h5>
                                     <div class="contentCard-info d-flex align-items-center justify-content-between">
-                                        <a href="{{route('instructorProfile', encryptor('encrypt', $a->course?->instructor->id))}}"
-                                            class="contentCard-user d-flex align-items-center">
-                                            <img src="{{asset('public/uploads/users/'.$a->course?->instructor?->image)}}"
-                                                alt="client-image" class="rounded-circle" height="34" width="34" />
-                                            <p class="font-para--md">{{$a->course?->instructor?->name_en}}</p>
-                                        </a>
+                                        {{-- <a href="{{route('instructorProfile', encryptor('encrypt', $a->course?->instructor->id))}}"
+                                            class="contentCard-user d-flex align-items-center"> --}}
+                                            {{-- <img src="{{asset('public/uploads/users/'.$a->course?->instructor?->image)}}"
+                                                alt="client-image" class="rounded-circle" height="34" width="34" /> --}}
+                                            <p class="font-para--md">{{$a->course?->instructor_names}}</p>
+                                        {{-- </a> --}}
                                         <div class="contentCard-course--status d-flex align-items-center">
-                                            <span class="percentage">43%</span>
+                                            <span class="percentage">{{$a->course?->instructor_names}}</span>
                                             <p>Finish</p>
                                         </div>
                                     </div>
